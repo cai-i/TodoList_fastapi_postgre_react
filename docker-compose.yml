@@ -16,10 +16,10 @@ services:
     command : ['python', 'main.py']
 
   frontend:
-    build: ./frontend_old
+    build: ./frontend
     volumes:
       - /app/node_modules
-      - ./frontend_old:/app
+      - ./frontend:/app
     ports:
       - 3000:3000
     stdin_open: true
