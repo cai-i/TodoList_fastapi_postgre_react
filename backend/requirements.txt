@@ -1,0 +1,9 @@
+# /api/requirements.txt
+fastapi
+pydantic
+uvicorn
+psycopg2
+typing
+python-multipart
+Jinja2
+sqlalchemy
