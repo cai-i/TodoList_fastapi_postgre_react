@@ -18,7 +18,7 @@ services:
   frontend:
     build: ./frontend
     volumes:
-      - node_module:/app/node_modules
+      - /app/node_modules
       - ./frontend:/app
     ports:
       - 3000:3000
@@ -49,4 +49,3 @@ services:
 # def volumes here :
 volumes :
   db-todo-service:
-  node_module:
