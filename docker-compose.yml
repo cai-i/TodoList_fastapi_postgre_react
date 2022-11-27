@@ -1,0 +1,52 @@
+# /docker-compose.yml du projet
+version: '3.4'
+
+services:
+  # def services
+
+  backend:
+    build: ./backend
+    # mapper certains ports
+    ports :
+      - 5000:5000
+    # monter le répertoire en tant que volume pour permettre au conteneur 
+    # d'accéder aux fichiers en temps réel
+    volumes :
+      - ./backend :/app
+    command : ['python', 'main.py']
+
+  frontend:
+    build: ./frontend
+    volumes:
+      - node_module:/app/node_modules
+      - ./frontend:/app
+    ports:
+      - 3000:3000
+    stdin_open: true
+    tty: true
+
+  database:
+    image: postgres
+    ports :
+      - 5432:5432
+    environment:
+      POSTGRES_USER: userpd
+      POSTGRES_PASSWORD: postgrespassword
+      POSTGRES_DB: dbesiee
+    volumes : # so data is retained
+      - db-todo-service:/var/lib/postgresql/data
+      # volume called : db-todo-service
+      # will link it to postgre data directory
+
+  adminer: # ui that let us interact with postgre much easily
+    image: adminer
+    restart: always
+    depends_on:
+      - database
+    ports:
+      - 8080:8080
+
+# def volumes here :
+volumes :
+  db-todo-service:
+  node_module:
