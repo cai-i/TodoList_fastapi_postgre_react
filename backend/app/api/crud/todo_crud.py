@@ -3,8 +3,7 @@ from app.api.models.todos_model import Todo
 from app.api.schemas.todo_basemodel import ToDoCreate, ToDoUpdate
 
 
-class CRUDTodo(CRUDBase[Todo, ToDoCreate, ToDoUpdate]):  # 1
+class CRUDTodo(CRUDBase[Todo, ToDoCreate, ToDoUpdate]):
     ...
 
-# instancie la CRUDToDo classe
-todo = CRUDTodo(Todo)  # 2
+todo = CRUDTodo(Todo)
