@@ -8,10 +8,15 @@ services:
       - 5000:5000
     volumes :
       - ./backend :/app
-    command : ['python', 'main.py']
+    command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "5000", "--reload"]
+    environment:
+      POSTGRES_USER: userpd
+      POSTGRES_PASSWORD: postgrespassword
+      POSTGRES_DB: dbesiee
 
   frontend:
     build: ./front
+    command: npm start
     volumes:
       - node_module:/app/node_modules
       - ./front:/app
