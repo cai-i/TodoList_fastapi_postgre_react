@@ -2,21 +2,21 @@
 
 import os
 from fastapi import FastAPI, Query, HTTPException, Request, Depends
-from fastapi.templating import Jinja2Templates
+# from fastapi.templating import Jinja2Templates
 from fastapi.middleware.cors import CORSMiddleware
 
 from sqlalchemy.orm import Session
 from typing import Optional, Any
 from pathlib import Path
 
-from app.api import deps
-from app.api.db.database import engine, BaseSQL
-from app.api.models import todos_model
-from app.api.schemas.todo_basemodel import ToDo, TodoSearchResults, ToDoCreate, ToDoUpdate
-from app.api.crud.todo_crud import todo
+from api import deps
+from api.db.database import engine, BaseSQL
+from api.models import todos_model
+from api.schemas.todo_basemodel import ToDo, TodoSearchResults, ToDoCreate, ToDoUpdate
+from api.crud.todo_crud import todo
 
-BASE_PATH = Path(__file__).resolve().parent
-TEMPLATES = Jinja2Templates(directory=str(BASE_PATH / "templates"))
+# BASE_PATH = Path(__file__).resolve().parent
+# TEMPLATES = Jinja2Templates(directory=str(BASE_PATH / "templates"))
 
 todos_model.BaseSQL.metadata.create_all(bind=engine)
 
@@ -26,7 +26,7 @@ app = FastAPI(
 )
 
 origins = [
-    'http://localhost:3000'
+    'http://localhost:5000'
 ]
 
 app.add_middleware(
