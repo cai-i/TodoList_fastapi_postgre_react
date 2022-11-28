@@ -8,7 +8,7 @@ POSTGRES_USER = os.environ.get("POSTGRES_USER")
 POSTGRES_PASSWORD = os.environ.get("POSTGRES_PASSWORD")
 POSTGRES_DB = os.environ.get("POSTGRES_DB")
 
-SQLALCHEMY_DATABASE_URL = f"postgresql://userpd:postgrespassword@db:5432/dbesiee"
+SQLALCHEMY_DATABASE_URL = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@db:5432/{POSTGRES_DB}"
 print(SQLALCHEMY_DATABASE_URL)
 
 engine = create_engine(
