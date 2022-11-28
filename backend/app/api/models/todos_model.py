@@ -1,6 +1,6 @@
 from sqlalchemy import Column, String, Integer, DateTime
 
-from app.api.db.database import BaseSQL
+from api.db.database import BaseSQL
 
 class Todo(BaseSQL):
 
