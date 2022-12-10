@@ -1,7 +1,7 @@
 # TodoList_fastapi_postgre_react
 
 ### Pour lancer l'application :
-* clone le projet dans un répertoire local avec la commande : git clone https://github.com/cai-i/TodoList_fastapi_postgre_react
+* clone le projet dans un répertoire local avec la commande : git clone https://github.com/cai-i/TodoList_fastapi_postgre_react (utiliser le projet présent sur la branche deployment_fixed afin d'avoir la version qui marche avec docker)
 * ouvrir docker desktop
 * aller à l'aide du terminal dans le répertoire où vous avez clone le projet
 * faire : docker-compose build
