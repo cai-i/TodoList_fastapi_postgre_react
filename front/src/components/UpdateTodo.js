@@ -2,9 +2,14 @@ import react, {useState, useContext} from "react"
 import {Form, Button, Card, Container, Stack} from "react-bootstrap"
 import { UpdateContext } from "../UpdateTodoContext"
 import { useHistory } from "react-router-dom"
+import DatePicker from 'react-datepicker'
+import moment from 'moment'
+
+import 'react-datepicker/dist/react-datepicker.css'
 
 const UpdateTodo = () => {
     const [updateTodoInfo, setUpdateTodoInfo] = useContext(UpdateContext)
+    const [date, setDate] = useState(new Date());
 
     let history = useHistory()
 
@@ -29,11 +34,17 @@ const UpdateTodo = () => {
                 body: JSON.stringify({
                     title: updateTodoInfo['TodoTitle'],
                     unit: updateTodoInfo['TodoUnit'],
+                    progress : updateTodoInfo['TodoProgress'],
+                    content : updateTodoInfo['TodoContent'],
+                    deadline : moment(date).format("yyyy-MM-DD")
                 }) 
             });
         setUpdateTodoInfo({
             TodoTitle: "",
             TodoUnit: "",
+            TodoProgress: "",
+            TodoContent: "",
+            TodoDeadline: "",
             TodoId: ""
         });
         history.push("/")
@@ -64,6 +75,41 @@ const UpdateTodo = () => {
                                     onChange={updateForm}
                                     placeholder='Todo Unit'
                                 />
+                            </Form.Group> 
+                            <Form.Group controlId='TodoUnit'>
+                                <Form.Label>Todo Progress</Form.Label>
+                                <Form.Control
+                                    type='text'
+                                    name='TodoProgress'
+                                    value={updateTodoInfo.TodoProgress}
+                                    onChange={updateForm}
+                                    placeholder='Todo Progress'
+                                />
+                            </Form.Group> 
+                            <Form.Group controlId='TodoContent'>
+                                <Form.Label>Todo Content</Form.Label>
+                                <Form.Control
+                                    type='text'
+                                    name='TodoContent'
+                                    value={updateTodoInfo.TodoContent}
+                                    onChange={updateForm}
+                                    placeholder='Todo Content'
+                                />
+                            </Form.Group> 
+                            <Form.Group controlId='TodoDeadline'>
+                                <Form.Label>Todo Deadline</Form.Label>
+                                <DatePicker 
+                                    dateFormat="yyyy-MM-dd"
+                                    selected={date} 
+                                    onChange={date => setDate(date)} 
+                                />
+                                {/* <Form.Control
+                                    type='text'
+                                    name='TodoDeadline'
+                                    value={updateTodoInfo.TodoDeadline}
+                                    onChange={updateForm}
+                                    placeholder='Todo Deadline'
+                                /> */}
                             </Form.Group> 
                             <Button variant='primary' type='submit'>
                                 Submit

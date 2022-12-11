@@ -39,6 +39,9 @@ const TodosTable= () => {
         setUpdateTodoInfo({
             TodoTitle: todo.title,
             TodoUnit: todo.unit,
+            TodoProgress : todo.progress,
+            TodoContent : todo.content,
+            TodoDeadline : todo.deadline,
             TodoId: id
         })
         history.push("/updateTodo")
@@ -110,13 +113,16 @@ const TodosTable= () => {
                         <Button type="submit" variant="secondary">Search</Button>
                     </Stack>
                 </Form>
-                <Button onClick={refreshPage} variant="outline-danger">Reset</Button>
+                <Button onClick={refreshPage} variant="outline-danger">Reset the selection</Button>
                 <div>
                     <Table responsive>
                         <thead>
                             <tr>
                                 <th>Title</th>
                                 <th>Unit</th>
+                                <th>Progress</th>
+                                <th>Content</th>
+                                <th>Deadline</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -126,6 +132,9 @@ const TodosTable= () => {
                                     id = {todo.id}
                                     title = {todo.title}
                                     unit = {todo.unit}
+                                    progress = {todo.progress}
+                                    content = {todo.content}
+                                    deadline = {todo.deadline}
                                     key = {todo.id}
                                     handleDelete = {handleDelete}
                                     handleUpdate = {handleUpdate}

@@ -20,7 +20,7 @@ const NavBar = () => {
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="mr-auto">            
-                        <Badge className="mt-2" variant="primary"> Number of Todo : {allTodos.length}</Badge>
+                        <Badge className="mt-2" variant="primary"> number of Todo left : {allTodos.length}</Badge>
                     </Nav>
                     <Navbar.Collapse className="justify-content-end">
                         <Stack direction="horizontal" gap={3}>

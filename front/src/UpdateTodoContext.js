@@ -6,6 +6,9 @@ export const UpdateTodoContextProvider = (todos_param) => {
     const [updateTodoInfo, setUpdateTodoInfo] = useState({
         TodoTitle: "",
         TodoUnit: "",
+        TodoProgress: "",
+        TodoContent: "",
+        TodoDeadline: "",
         TodoId: ""
     })
 

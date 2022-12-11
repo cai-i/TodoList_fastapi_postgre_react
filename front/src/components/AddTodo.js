@@ -3,14 +3,22 @@ import {Form, Button, Card, Container, Stack} from "react-bootstrap"
 
 import { useHistory } from "react-router-dom"
 
+import DatePicker from 'react-datepicker'
+import moment from 'moment'
+
+import 'react-datepicker/dist/react-datepicker.css'
+
 const AddTodo = () => {
 
     const [todoInfo, setTodoInfo] = useState(
         {
             TodoTitle: "",
-            TodoUnit: ""
+            TodoUnit: "",            
+            TodoProgress: "",
+            TodoContent: ""
         }
     )
+    const [date, setDate] = useState(new Date());
 
     let history = useHistory()
 
@@ -40,11 +48,17 @@ const AddTodo = () => {
                 body: JSON.stringify({
                     "title": todoInfo['TodoTitle'],
                     "unit": todoInfo['TodoUnit'],
+                    "progress" : todoInfo['TodoProgress'],
+                    "content" : todoInfo['TodoContent'],
+                    "deadline" : moment(date).format("yyyy-MM-DD")
                 }) 
             });
         setTodoInfo({
             TodoTitle: "",
-            TodoUnit: ""
+            TodoUnit: "",
+            TodoContent: "",
+            TodoProgress: "",
+            TodoDeadline: ""
         });
         history.push("/")
     }
@@ -64,6 +78,24 @@ const AddTodo = () => {
                                 <Form.Label>Todo Unit</Form.Label>
                                 <Form.Control type="text" name="TodoUnit"
                                 value={todoInfo.TodoUnit} onChange = {updateForm} placeholder="Todo Unit" />
+                            </Form.Group>
+                            <Form.Group controlId="TodoProgress">
+                                <Form.Label>Todo Progress</Form.Label>
+                                <Form.Control type="text" name="TodoProgress" 
+                                    value={todoInfo.TodoProgress} onChange = {updateForm} placeholder="Todo Progress" />
+                            </Form.Group>
+                            <Form.Group controlId="TodoContent">
+                                <Form.Label>Todo Content</Form.Label>
+                                <Form.Control type="text" name="TodoContent" 
+                                    value={todoInfo.TodoContent} onChange = {updateForm} placeholder="Todo Content" />
+                            </Form.Group>
+                            <Form.Group controlId="TodoDeadline">
+                                <Form.Label>Todo Deadline</Form.Label>
+                                <DatePicker 
+                                    dateFormat="yyyy-MM-dd"
+                                    selected={date} 
+                                    onChange={date => setDate(date)} 
+                                />
                             </Form.Group>
                             <Button variant="primary" type="submit">
                                 Submit

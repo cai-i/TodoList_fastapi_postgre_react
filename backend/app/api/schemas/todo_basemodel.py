@@ -1,15 +1,22 @@
 from pydantic import BaseModel, Field
-from typing import Sequence
-from datetime import datetime
+from typing import Sequence, Optional
+from datetime import date
 from typing_extensions import Annotated
+import pytz
 
 class ToDoBase(BaseModel):
     title: str
     unit: str
+    progress : int
+    content : Optional[str]
+    deadline : date
 
 class ToDoCreate(ToDoBase):
     title: str
     unit: str
+    progress : int
+    content : Optional[str]
+    deadline : date
 
 class ToDoUpdate(ToDoBase):
     pass
