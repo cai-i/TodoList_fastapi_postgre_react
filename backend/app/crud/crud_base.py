@@ -5,7 +5,7 @@ from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
-from api.db.database import BaseSQL
+from db.database import BaseSQL
 
 
 ModelType = TypeVar("ModelType", bound=BaseSQL)
@@ -17,16 +17,24 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
     def __init__(self, model: Type[ModelType]):
         self.model = model
 
-    def get(self, db: Session, id: Any) -> Optional[ModelType]:
-        return db.query(self.model).filter(self.model.id == id).first()
+    def get(self, db: Session, todo_id: int) -> Optional[ModelType]:
+        return db.query(self.model).filter(self.model.id == todo_id).first()
 
     def get_multi(
-        self, db: Session, *, skip: int = 0, limit: int = 100
+        self, 
+        db: Session, 
+        *, 
+        skip: int = 0, 
+        limit: int = 100
     ) -> List[ModelType]:
         return db.query(self.model).offset(skip).limit(limit).all()
 
     def create(self, db: Session, *, obj_in: CreateSchemaType) -> ModelType:
         obj_in_data = jsonable_encoder(obj_in)
+            # jsonable_encoder : 
+                # pr convertir un type de données (comme un modèle Pydantic) 
+                # en quelque chose de compatible avec JSON (comme un dict, list, etc.)
+                # ici, c'est un Pydantic (aller regarder ds repo schema)
         db_obj = self.model(**obj_in_data)
         db.add(db_obj)
         db.commit()

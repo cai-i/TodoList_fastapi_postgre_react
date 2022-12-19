@@ -6,14 +6,15 @@ from fastapi import FastAPI, Query, HTTPException, Request, Depends
 from fastapi.middleware.cors import CORSMiddleware
 
 from sqlalchemy.orm import Session
-from typing import Optional, Any
+from typing import Optional, Any, List
 from pathlib import Path
 
-from api import deps
-from api.db.database import engine, BaseSQL
-from api.models import todos_model
-from api.schemas.todo_basemodel import ToDo, TodoSearchResults, ToDoCreate, ToDoUpdate
-from api.crud.todo_crud import todo
+from db import deps
+from db.database import engine, BaseSQL
+from models import todos_model
+from schemas.todo_basemodel import ToDo, TodoSearchResults, ToDoCreate, ToDoUpdate, SubTodo, SubTodoCreate
+from crud.todo_crud import todo
+from services import todos_services
 
 # BASE_PATH = Path(__file__).resolve().parent
 # TEMPLATES = Jinja2Templates(directory=str(BASE_PATH / "templates"))
@@ -37,12 +38,11 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
-@app.get("/", status_code=200, tags=["root"])
-async def read_root(request: Request, db: Session = Depends(deps.get_db)) -> dict:
-    todos = todo.get_multi(db=db, limit=10)
-    return todos
+@app.get("/", response_model= List[ToDo])
+async def get_todos(db: Session = Depends(deps.get_db)) -> dict:
+    return todos_services.get_todos(db=db)
 
-@app.get("/todos/{todo_id}", status_code=200, response_model= ToDo)
+@app.get("/todos/{todo_id}", response_model= ToDo)
 def fetch_todo(
     *, 
     todo_id: int,
@@ -51,12 +51,7 @@ def fetch_todo(
     """
     Fetch a single todo by ID
     """
-    result = todo.get(db= db, id=todo_id)
-    if not result:
-        raise HTTPException(
-            status_code=404, detail=f"Todo with ID {todo_id} not found"
-        )
-    return result
+    return todos_services.get_todo_by_id(db= db, todo_id=todo_id)
 
 @app.get("/search/", status_code=200, response_model= TodoSearchResults)
 def search_todos(
@@ -66,7 +61,7 @@ def search_todos(
     db: Session = Depends(deps.get_db)
 ) -> dict:
     """
-    Search for recipes based on label keyword
+    Search for todos based on label keyword
     """
     todos= todo.get_multi(db=db, limit= max_results)
     if not keyword:
@@ -79,7 +74,7 @@ def create_todo(*, todo_in: ToDoCreate, db: Session = Depends(deps.get_db)) -> d
     """
     Create a new todo
     """
-    todo_var = todo.create(db=db, obj_in=todo_in)
+    todo_var = todos_services.create_todo(db=db, obj_in=todo_in)
     return todo_var
 
 @app.put("/todos/{id}", status_code=201, response_model= ToDo)
@@ -87,10 +82,10 @@ def update_todo(*, todo_in: ToDoUpdate, db: Session = Depends(deps.get_db), id=i
     """
     Update a todo
     """
-    todo_var = todo.get(db=db, id=id)
+    todo_var = todos_services.get_todo_by_id(db=db, todo_id=id)
     if not todo_var:
         raise HTTPException(status_code=404, detail="Todo not found")
-    todo_var = todo.update(db=db, db_obj=todo_var, obj_in=todo_in)
+    todo_var = todos_services.update_todo(db=db, db_obj=todo_var, obj_in=todo_in)
     return todo_var
 
 @app.delete("/todos/{id}", status_code=201, response_model= ToDo)
@@ -98,8 +93,31 @@ def delete_todo(*, db: Session = Depends(deps.get_db), id: int) -> dict:
     """
     Delete a todo
     """
-    todo_var = todo.get(db=db, id=id)
+    todo_var = todos_services.get_todo_by_id(db=db, todo_id=id)
     if not todo_var:
         raise HTTPException(status_code=404, detail="Item not found")
-    todo_var = todo.delete(db=db, id=id)
+    todo_var = todos_services.delete_todo(db=db, todo_id=id)
     return todo_var
+
+@app.delete("/todos", status_code=201, response_model= ToDo)
+def delete_todos(*, db: Session = Depends(deps.get_db)) -> dict:
+    """
+    Delete a todo
+    """
+    return todos_services.delete_all_todos(db=db)
+
+@app.get("/todos/{todo_id}/subtodos", response_model=List[SubTodo])
+def get_subtodos(todo_id: int, db: Session = Depends(deps.get_db)):
+    return todos_services.get_subtodos(db=db, todo_id=todo_id)
+
+@app.post("/todos/{todo_id}/subtodos", response_model=SubTodo)
+def create_subtodos(*, todo_id: int, subtodo: SubTodoCreate, db: Session = Depends(deps.get_db)) -> dict:
+    return todos_services.create_todo_subtodo(db=db, subtodo=subtodo, todo_id=todo_id)
+
+@app.delete("/todos/{todo_id}/subtodos", response_model= SubTodo)
+def delete_subtodo(*, db: Session = Depends(deps.get_db), todo_id: int, subtodo_id: int) -> dict:
+    subtodo_var = todos_services.get_subtodo_by_id(db=db, todo_id=todo_id, subtodo_id=subtodo_id)
+    if not subtodo_var:
+        raise HTTPException(status_code=404, detail="SubTodo not found")
+    subtodo_var = todos_services.delete_subtodo(db=db, todo_id=todo_id, subtodo_id=subtodo_id)
+    return subtodo_var
