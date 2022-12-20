@@ -1,16 +1,6 @@
 import {useEffect, useContext, useState} from "react"
-import { Form, FormControl, Stack, Container } from 'react-bootstrap'
+import { Table, Form, FormControl, Stack, Container } from 'react-bootstrap'
 import { useHistory , Link } from "react-router-dom"
-
-// create table
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-
 
 import { TodoContext } from "../ToDoContext"
 import { UpdateContext } from "../UpdateTodoContext"
@@ -20,7 +10,7 @@ import TodoRow from './TodosRow'
 import Button from '@mui/material/Button';
 
 
-const TodosTable= () => {
+const Todos_Table= () => {
     const [allTodos, setAllTodos] = useContext(TodoContext)
     const [updateTodoInfo, setUpdateTodoInfo] = useContext(UpdateContext)
 
@@ -139,40 +129,37 @@ const TodosTable= () => {
                 </Form>
                 <Button onClick={refreshPage} variant="outlined" color="error">Reset the selection</Button>
                 <div>
-                    <TableContainer component={Paper}>
-                        <Table aria-label="collapsible table"> 
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell />
-                                    <TableCell>Title</TableCell>
-                                    <TableCell align="right">Unit</TableCell>
-                                    <TableCell align="right">Progress</TableCell>
-                                    <TableCell align="right">Content</TableCell>
-                                    <TableCell align="right">Deadline</TableCell>
-                                    <TableCell align="right">Actions</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {allTodos.map(todo => (
-                                    <TodoRow
-                                        id = {todo.id}
-                                        title = {todo.title}
-                                        unit = {todo.unit}
-                                        progress = {todo.progress}
-                                        content = {todo.content}
-                                        deadline = {todo.deadline}
-                                        key = {todo.id}
-                                        handleDelete = {handleDelete}
-                                        handleUpdate = {handleUpdate}
-                                    />
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
+                    <Table responsive>
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Unit</th>
+                                <th>Progress</th>
+                                <th>Content</th>
+                                <th>Deadline</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {allTodos.map(todo => (
+                                <TodoRow
+                                    id = {todo.id}
+                                    title = {todo.title}
+                                    unit = {todo.unit}
+                                    progress = {todo.progress}
+                                    content = {todo.content}
+                                    deadline = {todo.deadline}
+                                    key = {todo.id}
+                                    handleDelete = {handleDelete}
+                                    handleUpdate = {handleUpdate}
+                                />
+                            ))}
+                        </tbody>
+                    </Table>
                 </div>
             </Stack>
         </Container>
     );
 }
 
-export default TodosTable;
+export default Todos_Table;
