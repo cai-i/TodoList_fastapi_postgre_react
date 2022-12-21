@@ -2,6 +2,8 @@ import {useEffect, useContext, useState} from "react"
 import { Form, FormControl, Stack, Container } from 'react-bootstrap'
 import { useHistory , Link } from "react-router-dom"
 
+import Button from '@mui/material/Button';
+
 // create table
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -11,28 +13,63 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
+// row
+import TodoRow from './TodosRow'
 
+// Todos
 import { TodoContext } from "../ToDoContext"
 import { UpdateContext } from "../UpdateTodoContext"
 
-import TodoRow from './TodosRow'
-
-import Button from '@mui/material/Button';
-
 
 const TodosTable= () => {
+    // Todos
     const [allTodos, setAllTodos] = useContext(TodoContext)
     const [updateTodoInfo, setUpdateTodoInfo] = useContext(UpdateContext)
 
-    // display once all unit added
-    let uniqueUnits = [...new Set(allTodos.map((todo) => todo.unit))];
-    
     // search in the todo list accroding to somme criterias
     const [searchByTitle, setSearchByTitle] = useState("")
     const [searchByUnit, setSearchByUnit] = useState("")
 
+    // display once all unit added
+    let uniqueUnits = [...new Set(allTodos.map((todo) => todo.unit))];
+
     // push to another url
     let history = useHistory()
+
+    // récupère toutes les todos depuis l'api
+    const fetchTodos = async () => {
+        const response = await fetch("http://localhost:5000")
+        const todos = await response.json()
+        setAllTodos(todos)
+    }
+    useEffect(() => {
+        fetchTodos()
+    }, [])
+
+
+    // recherche todo par titre
+    const updateSearchByTitle = (e) => {
+        setSearchByTitle(e.target.value)
+    }
+
+    // recherche todo par unité
+    const updateSearchByUnit = (e) => {
+        setSearchByUnit(e.target.value)
+    }
+
+    // recupère tous les todo de la recherche par titre
+    const filterTodoByTitle = (e) => {
+        e.preventDefault()
+        const todo = allTodos.filter(todo => todo.title.toLowerCase().includes(searchByTitle.toLowerCase()) )
+        setAllTodos(todo)
+    }
+
+    // recupère tous les todo de la recherche par unité
+    const filterTodoByUnit = (e) => {
+        e.preventDefault()
+        const todo = allTodos.filter(todo => todo.unit.toLowerCase() === searchByUnit.toLowerCase())
+        setAllTodos(todo)
+    }
 
     // delete todo given id
     const handleDelete = (id) => {
@@ -63,40 +100,6 @@ const TodosTable= () => {
             TodoId: id
         })
         history.push("/updateTodo")
-    }
-
-    // récupère toutes les todos depuis l'api
-    const fetchTodos = async () => {
-        const response = await fetch("http://localhost:5000")
-        const todos = await response.json()
-        setAllTodos(todos)
-    }
-    useEffect(() => {
-        fetchTodos()
-    }, [])
-
-    // recherche todo par titre
-    const updateSearchByTitle = (e) => {
-        setSearchByTitle(e.target.value)
-    }
-
-    // recherche todo par unité
-    const updateSearchByUnit = (e) => {
-        setSearchByUnit(e.target.value)
-    }
-
-    // recupère tous les todo de la recherche par titre
-    const filterTodoByTitle = (e) => {
-        e.preventDefault()
-        const todo = allTodos.filter(todo => todo.title.toLowerCase().includes(searchByTitle.toLowerCase()) )
-        setAllTodos(todo)
-    }
-
-    // recupère tous les todo de la recherche par unité
-    const filterTodoByUnit = (e) => {
-        e.preventDefault()
-        const todo = allTodos.filter(todo => todo.unit.toLowerCase() === searchByUnit.toLowerCase())
-        setAllTodos(todo)
     }
 
     // refresh la page
@@ -145,11 +148,11 @@ const TodosTable= () => {
                                 <TableRow>
                                     <TableCell />
                                     <TableCell>Title</TableCell>
-                                    <TableCell align="right">Unit</TableCell>
-                                    <TableCell align="right">Progress</TableCell>
-                                    <TableCell align="right">Content</TableCell>
-                                    <TableCell align="right">Deadline</TableCell>
-                                    <TableCell align="right">Actions</TableCell>
+                                    <TableCell align="left">Unit</TableCell>
+                                    <TableCell align="left">Progress</TableCell>
+                                    <TableCell align="left">Content</TableCell>
+                                    <TableCell align="left">Deadline</TableCell>
+                                    <TableCell align="left">Actions</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -164,6 +167,7 @@ const TodosTable= () => {
                                         key = {todo.id}
                                         handleDelete = {handleDelete}
                                         handleUpdate = {handleUpdate}
+                                        subtodos= {todo.subtodos}
                                     />
                                 ))}
                             </TableBody>

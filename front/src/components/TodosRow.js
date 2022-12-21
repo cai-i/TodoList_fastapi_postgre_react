@@ -1,5 +1,3 @@
-import {Stack} from "react-bootstrap"
-
 // customiser les bouttons
 import { styled } from '@mui/material/styles';
 import MuiButton from '@mui/material/Button';
@@ -9,15 +7,14 @@ import { yellow, red, lightBlue } from '@mui/material/colors';
 
 import React, {useEffect, useContext, useState} from "react"
 
+import { Form, Stack} from 'react-bootstrap'
+
 import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-
-import {SubtodoContext} from "../SubtodoContext"
 
 // Create row
 import Box from '@mui/material/Box';
@@ -32,9 +29,9 @@ import Typography from '@mui/material/Typography';
 import {ExpandMoreSharp} from '@mui/icons-material';
 import {ExpandLessSharp} from '@mui/icons-material';
 
-const TodoRow= ({id, title, unit, progress, content, deadline, handleDelete, handleUpdate}) => {
+const TodoRow= ({id, title, unit, progress, content, deadline, handleDelete, handleUpdate, subtodos}) => {
 
-    // open/close task
+    // open/close task in table
     const [openTask, setOpenTask] = useState(false);
 
     // customized button :
@@ -63,10 +60,6 @@ const TodoRow= ({id, title, unit, progress, content, deadline, handleDelete, han
         },
     }));
 
-    // Add task to Todo
-
-    // // pr les subtodos
-    // const [allSubtodos, setAllSubtodos] = useContext(SubtodoContext)
     // ouvrir la fenêtre pour ajouter task
     const [openAddTask, setOpenAddTask] = useState(false)
 
@@ -80,7 +73,69 @@ const TodoRow= ({id, title, unit, progress, content, deadline, handleDelete, han
         setOpenAddTask(false);
     };
 
+    // Add task to Todo
+
+    const [subtodoInfo, setSubtodoInfo] = useState(
+        {
+            SubtodoTitle: "",      
+            SubtodoProgress: ""
+        }
+    )
+
+    const handleSubtodoChange = (e) => {
+        setSubtodoInfo(
+            {...subtodoInfo, [e.target.name] : e.target.value}
+        )
+      };
+
+    const postData = async (e) => {
+        e.preventDefault();
+        console.log(subtodoInfo)
     
+        const url = "http://localhost:5000/todos/" + id + "/subtodos" 
+
+        const response = await fetch(
+            url, {
+                method: 'POST',
+                mode: 'cors',
+                cache: 'no-cache',
+                credentials: 'same-origin', 
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                redirect: 'follow',
+                referrerPolicy: 'no-referrer', 
+                body: JSON.stringify({
+                    "title": subtodoInfo['SubtodoTitle'],
+                    "progress" : subtodoInfo['SubtodoProgress']
+                }) 
+            });
+        setSubtodoInfo({
+            SubtodoTitle: "",
+            SubtodoProgress: ""
+        });
+        window.location.reload(false)
+        setOpenAddTask(true)
+    }
+
+    // delete todo given id
+    const handleSubtodoDelete = (subtodo_id) => {
+        fetch("http://localhost:5000/todos/" + id + "/subtodos/" + subtodo_id, {
+            method: "DELETE",
+            headers: {
+                accept: 'application/json'
+            }
+        })
+        .then(response => {
+            return response.json()
+        })
+        .then(data => {
+            const filteredSubtodos = subtodos.filter((subtodo) => subtodo.todo_id === id).filter((subtodo) => subtodo.id !== subtodo_id);
+            return filteredSubtodos
+        })
+        window.location.reload(false)
+    }
+
     return (
         <React.Fragment>
             <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
@@ -96,11 +151,11 @@ const TodoRow= ({id, title, unit, progress, content, deadline, handleDelete, han
                 <TableCell component="th" scope="row">
                     {title}
                 </TableCell>
-                <TableCell align="right">{unit}</TableCell>
-                <TableCell align="right">{progress}</TableCell>
-                <TableCell align="right">{content}</TableCell>
-                <TableCell align="right">{deadline}</TableCell>
-                <TableCell align="right">
+                <TableCell align="left">{unit}</TableCell>
+                <TableCell align="left">{progress}</TableCell>
+                <TableCell align="left">{content}</TableCell>
+                <TableCell align="left">{deadline}</TableCell>
+                <TableCell align="left">
                     <Stack direction="horizontal" gap={3}>
                         <UpdateButton onClick={() => handleUpdate(id)}>Update</UpdateButton>
                         <DeleteButton onClick={() => handleDelete(id)}>Delete</DeleteButton>
@@ -111,27 +166,26 @@ const TodoRow= ({id, title, unit, progress, content, deadline, handleDelete, han
                             <Dialog open={openAddTask} onClose={handleClose} fullWidth>
                                 <DialogTitle>Add Task</DialogTitle>
                                 <DialogContent>
-                                    <DialogContentText>
-                                                                                                            
-                                    </DialogContentText>
-                                    <TextField
-                                        autoFocus
-                                        margin="dense"
-                                        label="Title"
-                                        fullWidth
-                                        variant="standard"
-                                    />
-                                    <TextField
-                                        autoFocus
-                                        margin="dense"
-                                        label="Progress"
-                                        fullWidth
-                                        variant="standard"
-                                    />
+                                    <Form onSubmit = {postData}>
+                                        <Stack gap={3}>
+                                            <Form.Group controlId="SubtodoTitle">
+                                                <Form.Label>Task Title</Form.Label>
+                                                <Form.Control type="text" name="SubtodoTitle" 
+                                                    value={subtodoInfo.SubtodoTitle} onChange = {handleSubtodoChange} placeholder="Subtodo Title" />
+                                            </Form.Group>
+                                            <Form.Group controlId="SubtodoProgress">
+                                                <Form.Label>Task Progress</Form.Label>
+                                                <Form.Control type="text" name="SubtodoProgress"
+                                                value={subtodoInfo.SubtodoProgress} onChange = {handleSubtodoChange} placeholder="Subtodo Progress" />
+                                            </Form.Group>
+                                            <Button variant="contained" type="submit">
+                                                Submit
+                                            </Button>
+                                        </Stack>
+                                    </Form>
                                 </DialogContent>
                                 <DialogActions>
                                     <Button onClick={handleClose}>Cancel</Button>
-                                    <Button onClick={handleClose}>Submit</Button>
                                 </DialogActions>
                             </Dialog>
                         </div>
@@ -140,32 +194,32 @@ const TodoRow= ({id, title, unit, progress, content, deadline, handleDelete, han
             </TableRow>
             <TableRow>
                 <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-                    <Collapse in={openAddTask} timeout="auto" unmountOnExit>
+                    <Collapse in={openTask} timeout="auto" unmountOnExit>
                         <Box sx={{ margin: 1 }}>
                             <Typography variant="h6" gutterBottom component="div">
                                 Tasks
                             </Typography>
-                            <Table size="small" aria-label="purchases">
+                            <Table size="small" aria-label="tasks">
                                 <TableHead>
                                     <TableRow>
-                                        <TableCell>title</TableCell>
-                                        <TableCell>progress</TableCell>
+                                        <TableCell>Title</TableCell>
+                                        <TableCell>Progress</TableCell>
+                                        <TableCell>Actions</TableCell>
                                     </TableRow>
                                 </TableHead>
-                                {/* <TableBody>
-                                    {row.history.map((historyRow) => (
-                                        <TableRow key={historyRow.date}>
+                                <TableBody>
+                                    {subtodos.map((subtodo) => (
+                                        <TableRow  key={subtodo.id}>
                                             <TableCell component="th" scope="row">
-                                                {historyRow.date}
+                                                {subtodo.title}
                                             </TableCell>
-                                            <TableCell>{historyRow.customerId}</TableCell>
-                                            <TableCell align="right">{historyRow.amount}</TableCell>
-                                            <TableCell align="right">
-                                                {Math.round(historyRow.amount * row.price * 100) / 100}
+                                            <TableCell align="left">{ subtodo.progress }</TableCell>
+                                            <TableCell align="left">
+                                                <DeleteButton onClick={() => handleSubtodoDelete(subtodo.id)}> Delete </DeleteButton>
                                             </TableCell>
                                         </TableRow>
                                     ))}
-                                </TableBody> */}
+                                </TableBody>
                             </Table>
                         </Box>
                     </Collapse>
