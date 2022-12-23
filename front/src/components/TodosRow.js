@@ -118,7 +118,7 @@ const TodoRow= ({id, title, unit, progress, content, deadline, handleDelete, han
         setOpenAddTask(true)
     }
 
-    // delete todo given id
+    // delete subtodo given id
     const handleSubtodoDelete = (subtodo_id) => {
         fetch("http://localhost:5000/todos/" + id + "/subtodos/" + subtodo_id, {
             method: "DELETE",
@@ -200,7 +200,7 @@ const TodoRow= ({id, title, unit, progress, content, deadline, handleDelete, han
                                 Tasks
                             </Typography>
                             <Table size="small" aria-label="tasks">
-                                <TableHead>
+                                <TableHead style={{backgroundColor:'lightgrey'}}>
                                     <TableRow>
                                         <TableCell>Title</TableCell>
                                         <TableCell>Progress</TableCell>

@@ -10,6 +10,9 @@ class SubTodoBase(BaseModel):
 class SubTodoCreate(SubTodoBase):
     pass
 
+class SubTodoUpdate(SubTodoBase):
+    pass
+
 class SubTodo(SubTodoBase):
     id: int
     todo_id: int

@@ -4,7 +4,7 @@ from fastapi.encoders import jsonable_encoder
 from typing import List, Union, Dict, Any
 
 from models.todos_model import Todo, SubTodo
-from schemas.todo_basemodel import ToDoCreate, ToDoUpdate, SubTodoCreate
+from schemas.todo_basemodel import ToDoCreate, ToDoUpdate, SubTodoCreate, SubTodoUpdate
 
 def get_todo_by_id(db: Session, todo_id: int) -> Todo:
     record = db.query(Todo).filter(Todo.id == todo_id).first()
@@ -81,9 +81,22 @@ def create_todo_subtodo(db: Session, subtodo: SubTodoCreate, todo_id: int):
     db.refresh(obj)
     return obj
 
+def update_subtodo(db: Session, *, db_obj: SubTodo, obj_in: Union[SubTodoUpdate, Dict[str, Any]]) -> SubTodo:
+    obj_data = jsonable_encoder(db_obj)
+    if isinstance(obj_in, dict):
+        update_data = obj_in
+    else:
+        update_data = obj_in.dict(exclude_unset=True)
+    for field in obj_data:
+        if field in update_data:
+            setattr(db_obj, field, update_data[field])
+    db.add(db_obj)
+    db.commit()
+    db.refresh(db_obj)
+    return db_obj
 
 def delete_subtodo(db: Session, subtodo_id: int, todo_id: int) -> Todo:
-    obj = db.query(SubTodo).get_subtodo_by_id(db=db, subtodo_id=subtodo_id, todo_id=todo_id)
+    obj = get_subtodo_by_id(db=db, subtodo_id=subtodo_id, todo_id=todo_id)
     db.delete(obj)
     db.commit()
     return obj

@@ -144,8 +144,14 @@ const TodosTable= () => {
                 <div>
                     <TableContainer component={Paper}>
                         <Table aria-label="collapsible table"> 
-                            <TableHead>
-                                <TableRow>
+                            <TableHead > 
+                                {/* style={{backgroundColor:'green'}}> */}
+                                <TableRow sx={{
+                                    "& th": {
+                                        color: "white",
+                                        backgroundColor: "black"
+                                    }
+                                }}>
                                     <TableCell />
                                     <TableCell>Title</TableCell>
                                     <TableCell align="left">Unit</TableCell>
