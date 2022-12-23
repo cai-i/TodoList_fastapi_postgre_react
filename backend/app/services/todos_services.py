@@ -18,7 +18,7 @@ def get_todos(
         skip: int = 0, 
         limit: int = 100
     ) -> List[Todo]:
-    return db.query(Todo).offset(skip).limit(limit).all()
+    return db.query(Todo).order_by("deadline").offset(skip).limit(limit).all()
 
 
 def create_todo(db: Session, *, obj_in: ToDoCreate) -> Todo:

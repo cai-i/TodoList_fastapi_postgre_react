@@ -8,7 +8,7 @@ import { yellow, red, lightBlue } from '@mui/material/colors';
 import React, {useEffect, useContext, useState} from "react"
 
 import { Form, Stack} from 'react-bootstrap'
-
+ 
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -28,6 +28,9 @@ import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 import {ExpandMoreSharp} from '@mui/icons-material';
 import {ExpandLessSharp} from '@mui/icons-material';
+
+// subtodo rows
+import SubtodoRow from './SubtodosRow';
 
 const TodoRow= ({id, title, unit, progress, content, deadline, handleDelete, handleUpdate, subtodos}) => {
 
@@ -209,15 +212,13 @@ const TodoRow= ({id, title, unit, progress, content, deadline, handleDelete, han
                                 </TableHead>
                                 <TableBody>
                                     {subtodos.map((subtodo) => (
-                                        <TableRow  key={subtodo.id}>
-                                            <TableCell component="th" scope="row">
-                                                {subtodo.title}
-                                            </TableCell>
-                                            <TableCell align="left">{ subtodo.progress }</TableCell>
-                                            <TableCell align="left">
-                                                <DeleteButton onClick={() => handleSubtodoDelete(subtodo.id)}> Delete </DeleteButton>
-                                            </TableCell>
-                                        </TableRow>
+                                        <SubtodoRow 
+                                            subtodos = {subtodos}
+                                            id = {subtodo.id}
+                                            title = {subtodo.title}
+                                            progress = {subtodo.progress}
+                                            todo_id = {id}
+                                        />
                                     ))}
                                 </TableBody>
                             </Table>
