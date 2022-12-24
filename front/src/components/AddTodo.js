@@ -13,9 +13,12 @@ const AddTodo = () => {
     const [todoInfo, setTodoInfo] = useState(
         {
             TodoTitle: "",
-            TodoUnit: "",            
+            TodoCategory: "",            
             TodoProgress: "",
-            TodoContent: ""
+            TodoDeadline:"",
+            TodoDone: "",
+            TodoNext:"",
+            TodoPriority:""
         }
     )
     const [date, setDate] = useState(new Date());
@@ -47,18 +50,22 @@ const AddTodo = () => {
                 referrerPolicy: 'no-referrer', 
                 body: JSON.stringify({
                     "title": todoInfo['TodoTitle'],
-                    "unit": todoInfo['TodoUnit'],
+                    "category": todoInfo['TodoCategory'],
                     "progress" : todoInfo['TodoProgress'],
-                    "content" : todoInfo['TodoContent'],
-                    "deadline" : moment(date).format("yyyy-MM-DD")
+                    "deadline" : moment(date).format("yyyy-MM-DD"),
+                    "dodo" : todoInfo['TodoDone'],
+                    "next_todo" : todoInfo['TodoNext'],
+                    "priority" : todoInfo['TodoPriority'],
                 }) 
             });
         setTodoInfo({
             TodoTitle: "",
-            TodoUnit: "",
-            TodoContent: "",
+            TodoCategory: "",            
             TodoProgress: "",
-            TodoDeadline: ""
+            TodoDeadline:"",
+            TodoDone: "",
+            TodoNext:"",
+            TodoPriority:""
         });
         history.push("/")
     }
@@ -74,20 +81,30 @@ const AddTodo = () => {
                                 <Form.Control type="text" name="TodoTitle" 
                                     value={todoInfo.TodoTitle} onChange = {updateForm} placeholder="Todo Title" />
                             </Form.Group>
-                            <Form.Group controlId="TodoUnit">
-                                <Form.Label>Todo Unit</Form.Label>
-                                <Form.Control type="text" name="TodoUnit"
-                                value={todoInfo.TodoUnit} onChange = {updateForm} placeholder="Todo Unit" />
+                            <Form.Group controlId="TodoCategory">
+                                <Form.Label>Todo Category</Form.Label>
+                                <Form.Control type="text" name="TodoCategory"
+                                value={todoInfo.TodoCategory} onChange = {updateForm} placeholder="Todo Category" />
+                            </Form.Group>
+                            <Form.Group controlId="TodoDone">
+                                <Form.Label>Todo Done</Form.Label>
+                                <Form.Control type="text" name="TodoDone" 
+                                    value={todoInfo.TodoDone} onChange = {updateForm} placeholder="Todo Done" />
+                            </Form.Group>
+                            <Form.Group controlId="TodoNext">
+                                <Form.Label>Todo Next</Form.Label>
+                                <Form.Control type="text" name="TodoNext" 
+                                    value={todoInfo.TodoNext} onChange = {updateForm} placeholder="Todo Next" />
                             </Form.Group>
                             <Form.Group controlId="TodoProgress">
                                 <Form.Label>Todo Progress</Form.Label>
                                 <Form.Control type="text" name="TodoProgress" 
                                     value={todoInfo.TodoProgress} onChange = {updateForm} placeholder="Todo Progress" />
                             </Form.Group>
-                            <Form.Group controlId="TodoContent">
-                                <Form.Label>Todo Content</Form.Label>
-                                <Form.Control type="text" name="TodoContent" 
-                                    value={todoInfo.TodoContent} onChange = {updateForm} placeholder="Todo Content" />
+                            <Form.Group controlId="TodoPriority">
+                                <Form.Label>Todo Priority</Form.Label>
+                                <Form.Control type="text" name="TodoPriority" 
+                                    value={todoInfo.TodoPriority} onChange = {updateForm} placeholder="Todo Priority" />
                             </Form.Group>
                             <Form.Group controlId="TodoDeadline">
                                 <Form.Label>Todo Deadline</Form.Label>

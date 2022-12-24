@@ -32,7 +32,7 @@ import {ExpandLessSharp} from '@mui/icons-material';
 // subtodo rows
 import SubtodoRow from './SubtodosRow';
 
-const TodoRow= ({id, title, unit, progress, content, deadline, handleDelete, handleUpdate, subtodos}) => {
+const TodoRow= ({id, title, category, progress, done, next_todo, priority, deadline, handleDelete, handleUpdate, subtodos}) => {
 
     // open/close task in table
     const [openTask, setOpenTask] = useState(false);
@@ -81,7 +81,9 @@ const TodoRow= ({id, title, unit, progress, content, deadline, handleDelete, han
     const [subtodoInfo, setSubtodoInfo] = useState(
         {
             SubtodoTitle: "",      
-            SubtodoProgress: ""
+            SubtodoProgress: "",
+            SubtodoDone: "",
+            SubtodoNext: ""
         }
     )
 
@@ -110,12 +112,16 @@ const TodoRow= ({id, title, unit, progress, content, deadline, handleDelete, han
                 referrerPolicy: 'no-referrer', 
                 body: JSON.stringify({
                     "title": subtodoInfo['SubtodoTitle'],
-                    "progress" : subtodoInfo['SubtodoProgress']
+                    "progress" : subtodoInfo['SubtodoProgress'],
+                    "done" : subtodoInfo['SubtodoDone'],
+                    "next_todo" : subtodoInfo['SubtodoNext']
                 }) 
             });
         setSubtodoInfo({
-            SubtodoTitle: "",
-            SubtodoProgress: ""
+            SubtodoTitle: "",      
+            SubtodoProgress: "",
+            SubtodoDone: "",
+            SubtodoNext: ""
         });
         window.location.reload(false)
         setOpenAddTask(true)
@@ -154,10 +160,12 @@ const TodoRow= ({id, title, unit, progress, content, deadline, handleDelete, han
                 <TableCell component="th" scope="row">
                     {title}
                 </TableCell>
-                <TableCell align="left">{unit}</TableCell>
+                <TableCell align="left">{category}</TableCell> 
                 <TableCell align="left">{progress}</TableCell>
-                <TableCell align="left">{content}</TableCell>
+                <TableCell align="left">{category}</TableCell>
+                <TableCell align="left">{next_todo}</TableCell>
                 <TableCell align="left">{deadline}</TableCell>
+                <TableCell align="left">{priority}</TableCell>
                 <TableCell align="left">
                     <Stack direction="horizontal" gap={3}>
                         <UpdateButton onClick={() => handleUpdate(id)}>Update</UpdateButton>
@@ -180,6 +188,16 @@ const TodoRow= ({id, title, unit, progress, content, deadline, handleDelete, han
                                                 <Form.Label>Task Progress</Form.Label>
                                                 <Form.Control type="text" name="SubtodoProgress"
                                                 value={subtodoInfo.SubtodoProgress} onChange = {handleSubtodoChange} placeholder="Subtodo Progress" />
+                                            </Form.Group>
+                                            <Form.Group controlId="SubtodoDone">
+                                                <Form.Label>Task Done</Form.Label>
+                                                <Form.Control type="text" name="SubtodoDone"
+                                                value={subtodoInfo.SubtodoDone} onChange = {handleSubtodoChange} placeholder="Subtodo Done" />
+                                            </Form.Group>
+                                            <Form.Group controlId="SubtodoNext">
+                                                <Form.Label>Task Next To Do</Form.Label>
+                                                <Form.Control type="text" name="SubtodoNext"
+                                                value={subtodoInfo.SubtodoNext} onChange = {handleSubtodoChange} placeholder="Subtodo Next" />
                                             </Form.Group>
                                             <Button variant="contained" type="submit">
                                                 Submit
@@ -205,8 +223,11 @@ const TodoRow= ({id, title, unit, progress, content, deadline, handleDelete, han
                             <Table size="small" aria-label="tasks">
                                 <TableHead style={{backgroundColor:'lightgrey'}}>
                                     <TableRow>
+                                        <TableCell />
                                         <TableCell>Title</TableCell>
                                         <TableCell>Progress</TableCell>
+                                        <TableCell>Done</TableCell>
+                                        <TableCell>Next To Do</TableCell>
                                         <TableCell>Actions</TableCell>
                                     </TableRow>
                                 </TableHead>
@@ -217,6 +238,8 @@ const TodoRow= ({id, title, unit, progress, content, deadline, handleDelete, han
                                             id = {subtodo.id}
                                             title = {subtodo.title}
                                             progress = {subtodo.progress}
+                                            done={subtodo.done}
+                                            next_todo={subtodo.next_todo}
                                             todo_id = {id}
                                         />
                                     ))}

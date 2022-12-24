@@ -7,12 +7,14 @@ class Todo(BaseSQL):
 
     __tablename__ = "todo"
 
-    id = Column(Integer, primary_key=True, index=True) #UUID(as_uuid=True)
+    id = Column(Integer, primary_key=True, index=True)
     title = Column(String)
-    unit = Column(String)
+    category = Column(String)
     progress = Column(Integer)
-    content = Column(String)
+    done = Column(String)
+    next_todo = Column(String)
     deadline = Column(Date)
+    priority = Column(Integer)
     subtodos = relationship("SubTodo", back_populates='todo',cascade="all,delete")
 
 class SubTodo(BaseSQL):
@@ -23,4 +25,6 @@ class SubTodo(BaseSQL):
     todo_id = Column(Integer, ForeignKey('todo.id', onupdate="CASCADE", ondelete="CASCADE"), primary_key=True)
     title = Column(String)
     progress = Column(Integer)
+    done = Column(String)
+    next_todo = Column(String)
     todo = relationship("Todo", back_populates="subtodos")

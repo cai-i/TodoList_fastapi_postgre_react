@@ -6,6 +6,8 @@ export const UpdateSubtodoContextProvider = (subtodos_param) => {
     const [updateSubtodoInfo, setUpdateSubtodoInfo] = useState({
         SubtodoTitle: "",
         SubtodoProgress: "",
+        SubtodoDone:"",
+        SubtodoNext:"",
         SubtodoId: ""
     })
 

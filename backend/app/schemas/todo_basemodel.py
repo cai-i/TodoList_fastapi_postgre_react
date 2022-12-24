@@ -6,7 +6,9 @@ from uuid import uuid4, UUID
 class SubTodoBase(BaseModel):
     title: str
     progress : int
-
+    done : Optional[str]
+    next_todo : Optional[str]
+    
 class SubTodoCreate(SubTodoBase):
     pass
 
@@ -22,10 +24,12 @@ class SubTodo(SubTodoBase):
 
 class ToDoBase(BaseModel):
     title: str
-    unit: str
+    category: str
     progress : int
-    content : Optional[str]
     deadline : date
+    done : Optional[str]
+    next_todo : Optional[str]
+    priority : int
 
 class ToDoCreate(ToDoBase):
     pass

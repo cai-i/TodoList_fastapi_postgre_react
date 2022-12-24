@@ -33,17 +33,21 @@ const UpdateTodo = () => {
                 },
                 body: JSON.stringify({
                     title: updateTodoInfo['TodoTitle'],
-                    unit: updateTodoInfo['TodoUnit'],
+                    category: updateTodoInfo['TodoCategory'],
                     progress : updateTodoInfo['TodoProgress'],
-                    content : updateTodoInfo['TodoContent'],
+                    done : updateTodoInfo['TodoDone'],
+                    next_todo : updateTodoInfo['TodoNext'],
+                    priority : updateTodoInfo['TodoPriority'],
                     deadline : moment(date).format("yyyy-MM-DD")
                 }) 
             });
         setUpdateTodoInfo({
             TodoTitle: "",
-            TodoUnit: "",
+            TodoCategory: "",
             TodoProgress: "",
-            TodoContent: "",
+            TodoDone: "",
+            TodoNext:"",
+            TodoPriority:"",
             TodoDeadline: "",
             TodoId: ""
         });
@@ -66,17 +70,17 @@ const UpdateTodo = () => {
                                     placeholder='Todo Title'
                                 />
                             </Form.Group>
-                            <Form.Group controlId='TodoUnit'>
-                                <Form.Label>Todo Unit</Form.Label>
+                            <Form.Group controlId='TodoCategory'>
+                                <Form.Label>Todo Category</Form.Label>
                                 <Form.Control
                                     type='text'
-                                    name='TodoUnit'
-                                    value={updateTodoInfo.TodoUnit}
+                                    name='TodoCategory'
+                                    value={updateTodoInfo.TodoCategory}
                                     onChange={updateForm}
-                                    placeholder='Todo Unit'
+                                    placeholder='Todo Category'
                                 />
                             </Form.Group> 
-                            <Form.Group controlId='TodoUnit'>
+                            <Form.Group controlId='TodoProgress'>
                                 <Form.Label>Todo Progress</Form.Label>
                                 <Form.Control
                                     type='text'
@@ -86,14 +90,34 @@ const UpdateTodo = () => {
                                     placeholder='Todo Progress'
                                 />
                             </Form.Group> 
-                            <Form.Group controlId='TodoContent'>
-                                <Form.Label>Todo Content</Form.Label>
+                            <Form.Group controlId='TodoDone'>
+                                <Form.Label>Todo Done</Form.Label>
                                 <Form.Control
                                     type='text'
-                                    name='TodoContent'
-                                    value={updateTodoInfo.TodoContent}
+                                    name='TodoDone'
+                                    value={updateTodoInfo.TodoDone}
                                     onChange={updateForm}
-                                    placeholder='Todo Content'
+                                    placeholder='Todo Done'
+                                />
+                            </Form.Group> 
+                            <Form.Group controlId='TodoNext'>
+                                <Form.Label>Todo Next To Do</Form.Label>
+                                <Form.Control
+                                    type='text'
+                                    name='TodoNext'
+                                    value={updateTodoInfo.TodoNext}
+                                    onChange={updateForm}
+                                    placeholder='Todo Next'
+                                />
+                            </Form.Group> 
+                            <Form.Group controlId='TodoPriority'>
+                                <Form.Label>Todo Priority</Form.Label>
+                                <Form.Control
+                                    type='text'
+                                    name='TodoPriority'
+                                    value={updateTodoInfo.TodoPriority}
+                                    onChange={updateForm}
+                                    placeholder='Todo Priority'
                                 />
                             </Form.Group> 
                             <Form.Group controlId='TodoDeadline'>
@@ -103,13 +127,6 @@ const UpdateTodo = () => {
                                     selected={date} 
                                     onChange={date => setDate(date)} 
                                 />
-                                {/* <Form.Control
-                                    type='text'
-                                    name='TodoDeadline'
-                                    value={updateTodoInfo.TodoDeadline}
-                                    onChange={updateForm}
-                                    placeholder='Todo Deadline'
-                                /> */}
                             </Form.Group> 
                             <Button variant='primary' type='submit'>
                                 Submit

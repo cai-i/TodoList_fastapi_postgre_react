@@ -5,11 +5,13 @@ export const UpdateContext = createContext();
 export const UpdateTodoContextProvider = (todos_param) => {
     const [updateTodoInfo, setUpdateTodoInfo] = useState({
         TodoTitle: "",
-        TodoUnit: "",
+        TodoCategory: "",
         TodoProgress: "",
-        TodoContent: "",
         TodoDeadline: "",
-        TodoId: ""
+        TodoDone: "",
+        TodoNext:"",
+        TodoPriority:"",
+        TodoId: "" 
     })
 
     return (

@@ -17,7 +17,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 
-const SubtodoRow= ({subtodos, id, title, progress, todo_id}) => {
+const SubtodoRow= ({subtodos, id, title, progress, done, next_todo, todo_id}) => {
 
     //***********************************************************************
     // delete row :
@@ -76,8 +76,10 @@ const SubtodoRow= ({subtodos, id, title, progress, todo_id}) => {
         setUpdateSubtodoInfo({
             SubtodoTitle: title,
             SubtodoProgress : progress,
+            SubtodoDone : done,
+            SubtodoNext : next_todo,
             SubtodoId: id
-        })
+        }) 
     };
 
     // ferme la fenêtre
@@ -103,11 +105,15 @@ const SubtodoRow= ({subtodos, id, title, progress, todo_id}) => {
                 body: JSON.stringify({
                     title: updateSubtodoInfo['SubtodoTitle'],
                     progress : updateSubtodoInfo['SubtodoProgress'],
+                    done: updateSubtodoInfo['SubtodoDone'],
+                    next_todo : updateSubtodoInfo['SubtodoNext'],
                 }) 
             });
         setUpdateSubtodoInfo({
             SubtodoTitle: "",
             SubtodoProgress: "",
+            SubtodoDone:"",
+            SubtodoNext:"",
             SubtodoId: ""
         });
         window.location.reload(false)
@@ -119,10 +125,10 @@ const SubtodoRow= ({subtodos, id, title, progress, todo_id}) => {
     // **********************************************************************
     return (
         <TableRow  key={id}>
-            <TableCell component="th" scope="row">
-                {title}
-            </TableCell>
+            <TableCell component="th" scope="row">{title}</TableCell>
             <TableCell align="left">{progress}</TableCell>
+            <TableCell align="left">{done}</TableCell>
+            <TableCell align="left">{next_todo}</TableCell>
             <TableCell align="left">
                 <Stack direction="horizontal" gap={3}>
                     <div>
@@ -152,6 +158,25 @@ const SubtodoRow= ({subtodos, id, title, progress, todo_id}) => {
                                                 value={updateSubtodoInfo.SubtodoProgress} 
                                                 onChange = {updateForm} 
                                                 placeholder="Subtodo Progress" />
+                                        </Form.Group>
+                                        <Form.Group controlId="SubtodoDone">
+                                            <Form.Label>Task Done</Form.Label>
+                                            <Form.Control 
+                                                type="text" 
+                                                name="SubtodoDone" 
+                                                defaultValue={updateSubtodoInfo.SubtodoDone}
+                                                value={updateSubtodoInfo.SubtodoDone} 
+                                                onChange = {updateForm} 
+                                                placeholder="Subtodo Done" />
+                                        </Form.Group>
+                                        <Form.Group controlId="SubtodoNext">
+                                            <Form.Label>Task Next To Do</Form.Label>
+                                            <Form.Control 
+                                                type="text" name="SubtodoNext"
+                                                defaultValue={updateSubtodoInfo.SubtodoNext}
+                                                value={updateSubtodoInfo.SubtodoNext} 
+                                                onChange = {updateForm} 
+                                                placeholder="Subtodo Next" />
                                         </Form.Group>
                                         <Button variant="contained" type="submit">
                                             Submit
